@@ -43,15 +43,15 @@ mod tests;
 use options::SearchOptions;
 
 #[derive(Clone)]
-struct SearXNGClient {
-    base_url: Url,
-    timeout: Duration,
-    default_categories: Vec<String>,
-    local_category_prefixes: Vec<String>,
+pub struct SearXNGClient {
+    pub base_url: Url,
+    pub timeout: Duration,
+    pub default_categories: Vec<String>,
+    pub local_category_prefixes: Vec<String>,
 }
 
 impl SearXNGClient {
-    fn new(base_url: Url, timeout: Duration, default_categories: Vec<String>, local_category_prefixes: Vec<String>) -> Self {
+    pub fn new(base_url: Url, timeout: Duration, default_categories: Vec<String>, local_category_prefixes: Vec<String>) -> Self {
         Self {
             base_url,
             timeout,
@@ -318,12 +318,12 @@ struct Config {
 
 
 /// Mutable state shared by handlers.
-struct SearXNGState {
-    client: SearXNGClient,
+pub struct SearXNGState {
+    pub client: SearXNGClient,
 }
 
 /// Extension declaration.
-struct SearXNGExtension;
+pub struct SearXNGExtension;
 
 impl TauExtension for SearXNGExtension {
     type State = SearXNGState;
