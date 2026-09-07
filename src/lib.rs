@@ -121,7 +121,7 @@ impl SearXNGClient {
         _num_results: u32,
     ) -> String {
         let mut url_builder = self.base_url
-            .join("search/")
+            .join("search")
             .unwrap();
 
         let mut params = url_builder.query_pairs_mut();
