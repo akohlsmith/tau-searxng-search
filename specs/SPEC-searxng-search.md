@@ -65,7 +65,6 @@ Content: normalized JSON-like structure:
       "score": <float>,
       "language": "<language>",
       "published_date": "<date or null>",
-      "karakeep_tags": "[array of strings or omitted]",
       "tags": "[array of strings or omitted]"
     }
   ],
@@ -83,10 +82,9 @@ Result fields:
 - score: numerical relevance score.
 - language: detected result language.
 - published_date: publication date string if available.
-- karakeep_tags: array of tags from the karakeep_tags field in search results, if present and non-empty.
-- tags: array of tags from the tags field in search results, if present and non-empty.
-
-If both karakeep_tags and tags exist in the search result, both are included in the normalized output. Either field is omitted when absent, null, or empty.
+- tags: combined array of tags from both karakeep_tags and tags fields in search results.
+  If only one field exists, its value is used. If both exist, they are merged into a
+  single array. The field is omitted when neither exists, or both are absent/null/empty.
 
 ## Error handling
 

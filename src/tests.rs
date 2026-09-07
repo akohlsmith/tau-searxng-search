@@ -50,7 +50,7 @@ fn test_search_options_safe_search() {
 }
 
 #[test]
-fn test_parse_search_response_tags_extraction() {
+fn test_parse_search_response_tags_combined() {
     let base_url = Url::parse("http://localhost:8080").unwrap();
     let client = SearXNGClient::new(base_url, Duration::from_secs(15), vec![], vec![]);
 
@@ -58,7 +58,7 @@ fn test_parse_search_response_tags_extraction() {
         "query": { "query": "test query" },
         "results": [
             {
-                "title": "Test Result 1",
+                "title": "Both fields present",
                 "url": "https://example.com/1",
                 "content": "Snippet",
                 "engines": ["google"],
@@ -67,22 +67,45 @@ fn test_parse_search_response_tags_extraction() {
                 "tags": ["important"]
             },
             {
-                "title": "Test Result 2",
+                "title": "Only karakeep_tags",
                 "url": "https://example.com/2",
                 "content": "Snippet",
                 "engines": ["google"],
                 "score": 0.5,
+                "karakeep_tags": ["only_kara"]
+            },
+            {
+                "title": "Only tags",
+                "url": "https://example.com/3",
+                "content": "Snippet",
+                "engines": ["google"],
+                "score": 0.4,
+                "tags": ["only_tags"]
+            },
+            {
+                "title": "karakeep_tags null, tags present",
+                "url": "https://example.com/4",
+                "content": "Snippet",
+                "engines": ["google"],
+                "score": 0.3,
                 "karakeep_tags": null,
                 "tags": ["tag2"]
             },
             {
-                "title": "Test Result 3",
-                "url": "https://example.com/3",
+                "title": "Both empty arrays",
+                "url": "https://example.com/5",
                 "content": "Snippet",
                 "engines": ["google"],
-                "score": 0.3,
+                "score": 0.2,
                 "karakeep_tags": [],
                 "tags": []
+            },
+            {
+                "title": "No tags at all",
+                "url": "https://example.com/6",
+                "content": "Snippet",
+                "engines": ["google"],
+                "score": 0.1
             }
         ]
     })
@@ -93,30 +116,49 @@ fn test_parse_search_response_tags_extraction() {
     let parsed: serde_json::Value = serde_json::from_str(&output).unwrap();
     let results = parsed.get("results").unwrap().as_array().unwrap();
 
-    // Result 1: both tags present
+    // Result 1: both tags present -> merged into single tags field
     let result1 = &results[0];
-    assert!(result1.get("karakeep_tags").is_some());
-    assert_eq!(
-        result1["karakeep_tags"].as_array().unwrap(),
-        &["rust", "agent"]
-    );
+    assert!(result1.get("karakeep_tags").is_none(), "karakeep_tags field should not exist");
     assert!(result1.get("tags").is_some());
     assert_eq!(
         result1["tags"].as_array().unwrap(),
-        &["important"]
+        &["rust", "agent", "important"]
     );
 
-    // Result 2: karakeep_tags is null, omitted; tags preserved
+    // Result 2: only karakeep_tags -> renamed to tags
     let result2 = &results[1];
     assert!(result2.get("karakeep_tags").is_none());
     assert!(result2.get("tags").is_some());
     assert_eq!(
         result2["tags"].as_array().unwrap(),
+        &["only_kara"]
+    );
+
+    // Result 3: only tags -> preserved
+    let result3 = &results[2];
+    assert!(result3.get("karakeep_tags").is_none());
+    assert!(result3.get("tags").is_some());
+    assert_eq!(
+        result3["tags"].as_array().unwrap(),
+        &["only_tags"]
+    );
+
+    // Result 4: karakeep_tags is null, tags preserved
+    let result4 = &results[3];
+    assert!(result4.get("karakeep_tags").is_none());
+    assert!(result4.get("tags").is_some());
+    assert_eq!(
+        result4["tags"].as_array().unwrap(),
         &["tag2"]
     );
 
-    // Result 3: both are empty arrays, both omitted
-    let result3 = &results[2];
-    assert!(result3.get("karakeep_tags").is_none());
-    assert!(result3.get("tags").is_none());
+    // Result 5: both empty arrays -> tags field omitted
+    let result5 = &results[4];
+    assert!(result5.get("karakeep_tags").is_none());
+    assert!(result5.get("tags").is_none());
+
+    // Result 6: no tags fields -> omitted
+    let result6 = &results[5];
+    assert!(result6.get("karakeep_tags").is_none());
+    assert!(result6.get("tags").is_none());
 }

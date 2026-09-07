@@ -198,25 +198,31 @@ impl SearXNGClient {
                 .and_then(|v| v.as_str())
                 .map(|s| s.to_string());
 
-            // karakeep_tags: included only if present and non-null and non-empty
+            // Combine karakeep_tags and tags into a single "tags" field
             let karakeep_tags = result.get("karakeep_tags")
                 .and_then(|v| {
                     if v.is_null() || v.is_array().then_some(v.as_array().unwrap().is_empty()).unwrap_or(false) {
                         None
                     } else {
-                        Some(v.clone())
+                        Some(v.as_array().unwrap().clone())
                     }
                 });
 
-            // tags: included only if present and non-null and non-empty
             let tags = result.get("tags")
                 .and_then(|v| {
                     if v.is_null() || v.is_array().then_some(v.as_array().unwrap().is_empty()).unwrap_or(false) {
                         None
                     } else {
-                        Some(v.clone())
+                        Some(v.as_array().unwrap().clone())
                     }
                 });
+
+            let combined_tags = match (karakeep_tags, tags) {
+                (Some(a), Some(b)) => Some([a, b].concat()),
+                (Some(a), None) => Some(a),
+                (None, Some(b)) => Some(b),
+                (None, None) => None,
+            };
 
             let is_local = self.is_local_result(result);
 
@@ -231,11 +237,8 @@ impl SearXNGClient {
                 "_is_local": is_local
             });
 
-            if let Some(t) = karakeep_tags {
-                result_obj["karakeep_tags"] = t;
-            }
-            if let Some(t) = tags {
-                result_obj["tags"] = t;
+            if let Some(tags) = combined_tags {
+                result_obj["tags"] = serde_json::Value::Array(tags);
             }
 
             normalized_results.push(result_obj);
