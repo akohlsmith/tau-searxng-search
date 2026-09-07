@@ -56,7 +56,10 @@ fn extract_string(value: &Value, key: &str) -> Option<String> {
 
 fn extract_string_list(value: &Value, key: &str) -> Option<Vec<String>> {
     value.get(key).and_then(|v| match v {
-        Value::Array(arr) => Some(arr.iter().filter_map(|v| v.as_str()?.to_string()).collect()),
+        Value::Array(arr) => {
+            let result: Vec<String> = arr.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect();
+            Some(result)
+        },
         _ => None,
     })
 }
