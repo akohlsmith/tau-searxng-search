@@ -48,12 +48,10 @@ Build the extension as a standalone binary:
 
 ```bash
 cd /llama/tau/searxng_search
-RUSTFLAGS="-C linker=-Wl,-rpath,/usr/local/tau/.cargo/bin" cargo build --release
+cargo build --release
 ```
 
 Output binary: `target/release/tau-ext-searxng-search`.
-
-If Tau's cargo-bin directory uses a different path, adjust the rpath accordingly so the binary can find Tau's protocol libraries at runtime.
 
 Alternatively, build within Tau's workspace:
 
