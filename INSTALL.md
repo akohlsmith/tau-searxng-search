@@ -68,21 +68,19 @@ This produces `target/release/tau-ext-searxng-search`.
 
 Configure the extension in your harness.yaml:
 
-```json5
-{
-  extensions: {
-    "std-searxng-search": {
-      command: ["/path/to/tau-ext-searxng-search"],
-      enable: true,
-      config: {
-        base_url: "http://localhost:8080",
-        timeout_seconds: 15,
-        default_categories: ["general", "local"],
-        local_category_prefixes: ["local-"],
-      },
-    },
-  },
-}
+```yaml
+extensions:
+  std-searxng-search:
+    command: ["/path/to/tau-ext-searxng-search"]
+    enable: true
+    config:
+      base_url: "http://localhost:8080"
+      timeout_seconds: 15
+      default_categories:
+        - general
+        - local
+      local_category_prefixes:
+        - local-
 ```
 
 Key fields:
