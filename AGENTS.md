@@ -36,6 +36,6 @@ Unit tests in `src/tests.rs`. Integration tests require running SearXNG instance
 
 - `src/lib.rs`: Core extension and tool implementation.
 - `src/options.rs`: Search options parsing from tool arguments.
-- `src/query.rs`: Query URL building and response parsing utilities.
+
 - `src/tests.rs`: Unit tests for options parsing.
 - `specs/SPEC-searxng-search.md`: Project specification.

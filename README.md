@@ -30,6 +30,7 @@ Enable the extension and configure the SearXNG instance URL:
         base_url: "http://localhost:8080",
         timeout_seconds: 15,
         default_categories: ["general", "local"],
+        local_category_prefixes: ["local-"],
       },
     },
   },
@@ -102,7 +103,8 @@ Successful results return normalized JSON-like content within `<tau_web_content>
       "source_engine": "<engine name>",
       "score": <float>,
       "language": "<language>",
-      "published_date": "<date or null>"
+      "published_date": "<date or null>",
+      "tags": "<array of strings, omitted when absent>"
     }
   ],
   "count": <integer>,
