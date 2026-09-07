@@ -64,13 +64,29 @@ Content: normalized JSON-like structure:
       "source_engine": "<engine name>",
       "score": <float>,
       "language": "<language>",
-      "published_date": "<date or null>"
+      "published_date": "<date or null>",
+      "karakeep_tags": "<array of strings or omitted>",
+      "tags": "<array of strings or omitted>"
     }
   ],
   "count": <integer>,
   "had_errors": false
 }
 ```
+
+Result fields:
+
+- title: result title from search engine.
+- url: result URL.
+- content: text snippet or summary.
+- source_engine: SearXNG engine that provided the result.
+- score: numerical relevance score.
+- language: detected result language.
+- published_date: publication date string if available.
+- karakeep_tags: array of tags from the karakeep_tags field in search results, if present and non-empty.
+- tags: array of tags from the tags field in search results, if present and non-empty.
+
+If both karakeep_tags and tags exist in the search result, both are included in the normalized output. Either field is omitted when absent, null, or empty.
 
 ## Error handling
 
