@@ -65,8 +65,8 @@ Content: normalized JSON-like structure:
       "score": <float>,
       "language": "<language>",
       "published_date": "<date or null>",
-      "karakeep_tags": "<array of strings or omitted>",
-      "tags": "<array of strings or omitted>"
+      "karakeep_tags": "[array of strings or omitted]",
+      "tags": "[array of strings or omitted]"
     }
   ],
   "count": <integer>,

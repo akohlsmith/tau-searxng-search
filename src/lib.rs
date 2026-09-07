@@ -198,33 +198,25 @@ impl SearXNGClient {
                 .and_then(|v| v.as_str())
                 .map(|s| s.to_string());
 
+            // karakeep_tags: included only if present and non-null and non-empty
             let karakeep_tags = result.get("karakeep_tags")
                 .and_then(|v| {
-                    let is_null = v.is_null();
-                    if is_null { None } else { Some(v.clone()) }
-                })
-                .map(|v| {
-                    if v.is_array() && v.as_array().unwrap().is_empty() {
+                    if v.is_null() || v.is_array().then_some(v.as_array().unwrap().is_empty()).unwrap_or(false) {
                         None
                     } else {
-                        Some(v)
+                        Some(v.clone())
                     }
-                })
-                .flatten();
+                });
 
+            // tags: included only if present and non-null and non-empty
             let tags = result.get("tags")
                 .and_then(|v| {
-                    let is_null = v.is_null();
-                    if is_null { None } else { Some(v.clone()) }
-                })
-                .map(|v| {
-                    if v.is_array() && v.as_array().unwrap().is_empty() {
+                    if v.is_null() || v.is_array().then_some(v.as_array().unwrap().is_empty()).unwrap_or(false) {
                         None
                     } else {
-                        Some(v)
+                        Some(v.clone())
                     }
-                })
-                .flatten();
+                });
 
             let is_local = self.is_local_result(result);
 
