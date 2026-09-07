@@ -198,9 +198,37 @@ impl SearXNGClient {
                 .and_then(|v| v.as_str())
                 .map(|s| s.to_string());
 
+            let karakeep_tags = result.get("karakeep_tags")
+                .and_then(|v| {
+                    let is_null = v.is_null();
+                    if is_null { None } else { Some(v.clone()) }
+                })
+                .map(|v| {
+                    if v.is_array() && v.as_array().unwrap().is_empty() {
+                        None
+                    } else {
+                        Some(v)
+                    }
+                })
+                .flatten();
+
+            let tags = result.get("tags")
+                .and_then(|v| {
+                    let is_null = v.is_null();
+                    if is_null { None } else { Some(v.clone()) }
+                })
+                .map(|v| {
+                    if v.is_array() && v.as_array().unwrap().is_empty() {
+                        None
+                    } else {
+                        Some(v)
+                    }
+                })
+                .flatten();
+
             let is_local = self.is_local_result(result);
 
-            normalized_results.push(json!({
+            let mut result_obj = json!({
                 "title": title,
                 "url": url,
                 "content": content,
@@ -209,7 +237,16 @@ impl SearXNGClient {
                 "language": language,
                 "published_date": published_date,
                 "_is_local": is_local
-            }));
+            });
+
+            if let Some(t) = karakeep_tags {
+                result_obj["karakeep_tags"] = t;
+            }
+            if let Some(t) = tags {
+                result_obj["tags"] = t;
+            }
+
+            normalized_results.push(result_obj);
         }
 
         if prefer_local {
