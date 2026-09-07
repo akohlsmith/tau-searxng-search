@@ -1,11 +1,12 @@
 # Installation
 
-Integration of tau-ext-searxng-search into Tau.
+Build as a standalone Tau extension binary. No Tau rebuild required.
 
 ## Prerequisites
 
 - Running SearXNG instance with JSON API enabled.
-- HTTPS recommended for production deployments.
+- Rust toolchain matching Tau's build environment (Rust 1.91+).
+- Tau installation with access to harness.yaml configuration.
 
 ## SearXNG configuration
 
@@ -41,36 +42,55 @@ engines:
 
 Categories are defined under `engines[].categories[]`. The `local` category should include your custom engines for local searches.
 
-## Tau integration
+## Build
 
-Copy the extension into your Tau installation:
-
-```bash
-cp -r /llama/tau/searxng_search /path/to/tau-install/crates/tau-ext-searxng-search
-```
-
-Or integrate directly into the tau repository:
+Build the extension as a standalone binary:
 
 ```bash
-git clone /llama/tau/searxng_search tau/crates/tau-ext-searxng-search
+cd /llama/tau/searxng_search
+RUSTFLAGS="-C linker=-Wl,-rpath,/usr/local/tau/.cargo/bin" cargo build --release
 ```
 
-Add the extension to Tau's extension list and configure:
+Output binary: `target/release/tau-ext-searxng-search`.
+
+If Tau's cargo-bin directory uses a different path, adjust the rpath accordingly so the binary can find Tau's protocol libraries at runtime.
+
+Alternatively, build within Tau's workspace:
+
+```bash
+cd /llama/tau/tau
+cargo build --release -p tau-ext-searxng-search
+```
+
+This produces `target/release/tau-ext-searxng-search`.
+
+## Tau configuration
+
+Configure the extension in your harness.yaml:
 
 ```json5
 {
   extensions: {
     "std-searxng-search": {
+      command: ["/path/to/tau-ext-searxng-search"],
       enable: true,
       config: {
         base_url: "http://localhost:8080",
         timeout_seconds: 15,
         default_categories: ["general", "local"],
+        local_category_prefixes: ["local-"],
       },
     },
   },
 }
 ```
+
+Key fields:
+- `command`: path to the standalone extension binary. This replaces any built-in command and runs external.
+- `enable`: must be true for the extension to start.
+- `config`: forwarded to the extension via LifecycleConfigure.
+
+This configuration runs tau-ext-searxng-search as a supervised child process connected via stdio over the Tau protocol. No Tau rebuild required.
 
 ## Verification
 
@@ -82,7 +102,11 @@ curl -s 'http://localhost:8080/search?q=test&format=json' | jq '.results[:2]'
 
 Expected output: JSON array of results with title/url/content fields.
 
+Restart Tau after configuration changes. Check logs for extension startup.
+
 ## Notes
 
 - Restart Tau after configuration changes.
 - Configuration and secret files are not watched; explicit restart required.
+- The extension communicates over stdio using Tau's CBOR protocol.
+- Extension startup timeout is 2 seconds by default; increase via `startup_timeout_seconds` if needed.
