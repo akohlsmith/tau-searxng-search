@@ -1,6 +1,6 @@
 # Installation
 
-Build as a standalone Tau extension binary. No Tau rebuild required.
+Build as a standalone Tau extension binary, install it somewhere Tau can find it, configure in harness.yaml.
 
 ## Prerequisites
 
@@ -44,8 +44,6 @@ Categories are defined under `engines[].categories[]`. The `local` category shou
 
 ## Build
 
-Build the extension as a standalone binary:
-
 ```bash
 cd /llama/tau/searxng_search
 cargo build --release
@@ -60,7 +58,16 @@ cd /llama/tau/tau
 cargo build --release -p tau-ext-searxng-search
 ```
 
-This produces `target/release/tau-ext-searxng-search`.
+## Install
+
+Copy the binary to a directory in your PATH or a fixed location:
+
+```bash
+mkdir -p /usr/local/tau/bin
+cp target/release/tau-ext-searxng-search /usr/local/tau/bin/
+```
+
+Adjust the path as needed for your deployment. The extension must be executable.
 
 ## Tau configuration
 
@@ -69,7 +76,7 @@ Configure the extension in your harness.yaml:
 ```yaml
 extensions:
   std-searxng-search:
-    command: ["/path/to/tau-ext-searxng-search"]
+    command: ["/usr/local/tau/bin/tau-ext-searxng-search"]
     enable: true
     config:
       base_url: "http://localhost:8080"
@@ -82,7 +89,7 @@ extensions:
 ```
 
 Key fields:
-- `command`: path to the standalone extension binary. This replaces any built-in command and runs external.
+- `command`: absolute path to the standalone extension binary.
 - `enable`: must be true for the extension to start.
 - `config`: forwarded to the extension via LifecycleConfigure.
 
