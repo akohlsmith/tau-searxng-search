@@ -95,6 +95,26 @@ Key fields:
 
 This configuration runs tau-ext-searxng-search as a supervised child process connected via stdio over the Tau protocol. No Tau rebuild required.
 
+### Make SearXNG the exclusive search backend
+
+Disable Tau's built-in web search tools to route all searches through SearXNG:
+
+```yaml
+agents:
+  web_tools:
+    search:
+      candidates:
+        native:
+          enable: false
+        external:
+          enable: false
+        search_searxng:
+          enable: true
+          priority: 10
+          kind: tool
+          tool: search_searxng
+```
+
 ## Verification
 
 Test the SearXNG JSON API:

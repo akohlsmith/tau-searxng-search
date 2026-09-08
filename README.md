@@ -58,7 +58,27 @@ extensions:
         - "http://secondary:8080"
 ```
 
-Restart Tau (or restart the extension through its supervisor) after changing configuration.
+### Disable built-in web search tools
+
+Disable Tau's native and external web search tools to route all searches through SearXNG:
+
+```yaml
+agents:
+  web_tools:
+    search:
+      candidates:
+        native:
+          enable: false
+        external:
+          enable: false
+        search_searxng:
+          enable: true
+          priority: 10
+          kind: tool
+          tool: search_searxng
+```
+
+Restart Tau after changing configuration.
 
 ## Tool parameters
 
