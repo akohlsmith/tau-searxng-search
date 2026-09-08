@@ -21,53 +21,41 @@ SearXNG is privacy-preserving from user-to-internet perspective: queries route t
 
 Enable the extension and configure the SearXNG instance URL:
 
-```json5
-{
-  extensions: {
-    "std-searxng-search": {
-      enable: true,
-      config: {
-        base_url: "http://localhost:8080",
-        timeout_seconds: 15,
-        default_categories: ["general", "local"],
-        local_category_prefixes: ["local-"],
-      },
-    },
-  },
-}
+```yaml
+extensions:
+  std-searxng-search:
+    enable: true
+    config:
+      base_url: "http://localhost:8080"
+      timeout_seconds: 15
+      default_categories:
+        - general
+        - local
+      local_category_prefixes:
+        - local-
 ```
 
 Optional reverse-proxy authentication:
 
-```json5
-{
-  extensions: {
-    "std-searxng-search": {
-      secrets: {
-        basic_auth: {},
-      },
-      config: {
-        base_url: "http://localhost:8080",
-        basic_auth_secret: "basic_auth",
-      },
-    },
-  },
-}
+```yaml
+extensions:
+  std-searxng-search:
+    secrets:
+      basic_auth: {}
+    config:
+      base_url: "http://localhost:8080"
+      basic_auth_secret: "basic_auth"
 ```
 
 Optional instance failover:
 
-```json5
-{
-  extensions: {
-    "std-searxng-search": {
-      config: {
-        base_url: "http://primary:8080",
-        fallback_urls: ["http://secondary:8080"],
-      },
-    },
-  },
-}
+```yaml
+extensions:
+  std-searxng-search:
+    config:
+      base_url: "http://primary:8080"
+      fallback_urls:
+        - "http://secondary:8080"
 ```
 
 Restart Tau (or restart the extension through its supervisor) after changing configuration.
