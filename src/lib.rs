@@ -15,8 +15,8 @@ use url::Url;
 /// Log target for events emitted from this extension.
 pub const LOG_TARGET: &str = "searxng_search";
 
-/// Tool name advertised to models.
-pub const MODEL_VISIBLE_TOOL_NAME: &str = "searxng_search";
+/// Unique tool name.
+pub const UNIQUE_TOOL_NAME: &str = "searxng_search";
 
 /// Default SearXNG instance URL.
 pub const DEFAULT_BASE_URL: &str = "http://localhost:8080";
@@ -384,7 +384,7 @@ impl TauExtension for SearXNGExtension {
             })
             .tool(
                 ToolSpec {
-                    name: ToolName::new(MODEL_VISIBLE_TOOL_NAME),
+                    name: ToolName::new(UNIQUE_TOOL_NAME),
                     model_visible_name: Some(ToolName::new("web_search")),
                     description: Some("Search using SearXNG instance".into()),
                     tool_type: ToolType::Function,
