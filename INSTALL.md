@@ -75,7 +75,7 @@ Configure the extension in your harness.yaml:
 
 ```yaml
 extensions:
-  std-searxng-search:
+  search_searxng:
     command: ["/usr/local/tau/bin/tau-ext-searxng-search"]
     enable: true
     config:

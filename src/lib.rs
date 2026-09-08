@@ -361,7 +361,7 @@ impl TauExtension for SearXNGExtension {
     type State = SearXNGState;
 
     fn name(&self) -> &'static str {
-        "std-searxng-search"
+        "search_searxng"
     }
 
     fn register(self, builder: &mut ExtensionBuilder<Self::State>) {

@@ -23,7 +23,7 @@ Enable the extension and configure the SearXNG instance URL:
 
 ```yaml
 extensions:
-  std-searxng-search:
+  search_searxng:
     enable: true
     config:
       base_url: "http://localhost:8080"
@@ -39,7 +39,7 @@ Optional reverse-proxy authentication:
 
 ```yaml
 extensions:
-  std-searxng-search:
+  search_searxng:
     secrets:
       basic_auth: {}
     config:
@@ -51,7 +51,7 @@ Optional instance failover:
 
 ```yaml
 extensions:
-  std-searxng-search:
+  search_searxng:
     config:
       base_url: "http://primary:8080"
       fallback_urls:
