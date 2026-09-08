@@ -18,9 +18,6 @@ pub const LOG_TARGET: &str = "searxng_search";
 /// Tool name advertised to models.
 pub const MODEL_VISIBLE_TOOL_NAME: &str = "searxng_search";
 
-/// Alternate tool name for web_search discovery.
-pub const WEB_SEARCH_TOOL_NAME: &str = "web_search";
-
 /// Default SearXNG instance URL.
 pub const DEFAULT_BASE_URL: &str = "http://localhost:8080";
 
@@ -390,34 +387,6 @@ impl TauExtension for SearXNGExtension {
                     name: ToolName::new(MODEL_VISIBLE_TOOL_NAME),
                     model_visible_name: None,
                     description: Some("Search using SearXNG instance".into()),
-                    tool_type: ToolType::Function,
-                    parameters: Some(serde_json::json!({
-                        "type": "object",
-                        "properties": {
-                            "query": {"type": "string", "description": "Search query"},
-                            "categories": {"type": "array", "items": {"type": "string"}, "description": "SearXNG categories to use"},
-                            "engines": {"type": "array", "items": {"type": "string"}, "description": "Specific engines to use"},
-                            "language": {"type": "string", "description": "Language code"},
-                            "time_range": {"type": "string", "description": "Time filter"},
-                            "num_results": {"type": "integer", "description": "Maximum results"},
-                            "safe_search": {"type": "integer", "description": "Safe search level"},
-                            "prefer_local": {"type": "boolean", "description": "Prioritize local-category results"}
-                        },
-                        "required": ["query"]
-                    })),
-                    format: None,
-                    tags: Vec::new(),
-                    enabled_by_default: true,
-                    background_support: None,
-                    examples: Vec::new(),
-                },
-                handle_search,
-            )
-            .tool(
-                ToolSpec {
-                    name: ToolName::new(WEB_SEARCH_TOOL_NAME),
-                    model_visible_name: None,
-                    description: Some("Search the web using SearXNG".into()),
                     tool_type: ToolType::Function,
                     parameters: Some(serde_json::json!({
                         "type": "object",
