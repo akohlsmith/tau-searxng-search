@@ -385,7 +385,7 @@ impl TauExtension for SearXNGExtension {
             .tool(
                 ToolSpec {
                     name: ToolName::new(UNIQUE_TOOL_NAME),
-                    model_visible_name: Some(ToolName::new("web_search")),
+                    model_visible_name: Some(ToolName::new("web_search_searxng")),
                     description: Some("Search using SearXNG instance".into()),
                     tool_type: ToolType::Function,
                     parameters: Some(serde_json::json!({
